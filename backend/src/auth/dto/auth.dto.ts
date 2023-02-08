@@ -17,3 +17,13 @@ export class SignupDto {
   @IsNotEmpty()
   lastName: string;
 }
+
+export class SigninDto {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}

@@ -10,4 +10,25 @@ export class UserService {
     private usersRepository: Repository<Users>,
   ) {}
 
+  async editUser(currentUser: Users, userData: Users) {
+    const editUserData = {
+      lastName: userData.lastName,
+      firstName: userData.firstName,
+    };
+
+    try {
+      await this.usersRepository.update({ id: currentUser.id }, editUserData);
+      return await this.usersRepository.findOne({
+        where: {
+          id: currentUser.id,
+        },
+      });
+    } catch (err) {
+      return {
+        statusCode: 500,
+        message: 'Internal server error',
+        error: 'Server Error',
+      };
+    }
+  }
 }
