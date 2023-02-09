@@ -38,6 +38,7 @@ export class AuthService {
       return this.signToken(user.id, user.email);
     } catch (err) {
       if (!err.response) {
+        console.log(err);
         return {
           statusCode: 500,
           message: 'Internal server error',

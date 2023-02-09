@@ -1,6 +1,8 @@
 import { utimes } from "fs";
 import React, { useRef } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { authActions } from "../../store/auth-slice";
 import classes from "./Form.module.css";
 
 interface FormProps {
@@ -13,6 +15,8 @@ const Form: React.FC<FormProps> = ({ isSigningUp }) => {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const formSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +47,8 @@ const Form: React.FC<FormProps> = ({ isSigningUp }) => {
       const jwt = await res.json();
       console.log(jwt);
       window.localStorage.setItem("token", jwt.access_token);
-      navigate("/sign-in");
+      dispatch(authActions.login());
+      navigate("/profile");
 
       if (res.status !== 200) {
         throw new Error("Unauthorized");

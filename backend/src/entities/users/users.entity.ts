@@ -20,6 +20,12 @@ export class Users {
   @Column()
   email: string;
 
+  @Column({
+    type: 'varchar',
+    default: '',
+  })
+  imgUrl: string;
+
   @Column()
   hash: string;
 

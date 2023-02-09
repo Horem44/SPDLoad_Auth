@@ -10,8 +10,9 @@ export class UserService {
     private usersRepository: Repository<Users>,
   ) {}
 
-  async editUser(currentUser: Users, userData: Users) {
+  async editUser(currentUser: Users, userData: Users, imgUrl: string) {
     const editUserData = {
+      imgUrl: 'http://localhost:8080/' + imgUrl,
       lastName: userData.lastName,
       firstName: userData.firstName,
     };
