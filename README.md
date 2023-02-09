@@ -31,3 +31,6 @@ VERIFICATION_SECRET=<VERIFICATION_SECRET>
 
 In backend folder run: npm run start:dev
 In frontend folder run: npm start
+
+![alt text](https://user-images.githubusercontent.com/72016991/217929773-4b526e03-9b8e-4998-a36c-9a5185d4c1c3.png)
+![alt text](https://user-images.githubusercontent.com/72016991/217929782-6de033e1-fbaf-467d-82d3-60434670bf1e.png)
