@@ -4,10 +4,28 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from './entities/users/users.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { EmailModule } from './email/email.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.googlemail.com',
+        port: 465,
+        ignoreTLS: true,
+        secure: true,
+        auth: {
+          user: 'promenergo.typography@gmail.com',
+          pass: 'caueqicjetbzxvgt',
+        },
+      },
+      defaults: {
+        from: '"No Reply" <no-reply@gmail.com>',
+      },
+      preview: false,
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -20,6 +38,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UserModule,
     AuthModule,
+    EmailModule,
   ],
 })
 export class AppModule {}

@@ -1,8 +1,5 @@
 import {
-  Action,
-  AnyAction,
   createSlice,
-  ThunkDispatch,
 } from "@reduxjs/toolkit";
 import  RootState from "./index";
 

@@ -3,6 +3,10 @@ import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "../../util/notifications";
 import classes from "./Form.module.css";
 
 interface FormProps {
@@ -44,17 +48,33 @@ const Form: React.FC<FormProps> = ({ isSigningUp }) => {
         body: JSON.stringify(userData),
       });
 
+      if(res.status === 400){
+        showErrorNotification("Write correct email!");
+        return;
+      }
+
       const jwt = await res.json();
+
+      if(jwt.message){
+        showErrorNotification(jwt.message);
+        return;
+      }
+
       console.log(jwt);
       window.localStorage.setItem("token", jwt.access_token);
       dispatch(authActions.login());
       navigate("/profile");
+
+      showSuccessNotification(
+        "You have signed-" + (isSigningUp ? "up " : "in ") + "successfully!"
+      );
 
       if (res.status !== 200) {
         throw new Error("Unauthorized");
       }
     } catch (err) {
       if (err instanceof Error) {
+        showErrorNotification(err.message);
         console.log(err.message);
       }
     }

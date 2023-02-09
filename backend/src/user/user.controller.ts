@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Patch,
   Post,
   Req,
@@ -16,6 +18,8 @@ import { Users } from 'src/entities/users/users.entity';
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { multerConfig } from 'configs';
 
 @Controller('users')
 export class UserController {
@@ -29,21 +33,12 @@ export class UserController {
 
   @UseGuards(JwtGuard)
   @Post('edit')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './public/',
-        filename: (req, file, cb) => {
-          cb(null, file.originalname);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file', multerConfig))
   editMe(
     @GetUser() currentUser: Users,
     @Req() req: Request<Users>,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.userService.editUser(currentUser, req.body, file.path);
+    return this.userService.editUser(currentUser, req.body, file);
   }
 }

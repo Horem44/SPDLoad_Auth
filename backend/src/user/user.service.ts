@@ -10,12 +10,29 @@ export class UserService {
     private usersRepository: Repository<Users>,
   ) {}
 
-  async editUser(currentUser: Users, userData: Users, imgUrl: string) {
-    const editUserData = {
-      imgUrl: 'http://localhost:8080/' + imgUrl,
-      lastName: userData.lastName,
-      firstName: userData.firstName,
-    };
+  async editUser(
+    currentUser: Users,
+    userData: Users,
+    file: Express.Multer.File,
+  ) {
+    let imgUrl;
+
+    if (!file) {
+      imgUrl = '';
+    } else {
+      imgUrl = file.path;
+    }
+
+    const editUserData = imgUrl
+      ? {
+          imgUrl: 'http://localhost:8080/' + imgUrl,
+          lastName: userData.lastName,
+          firstName: userData.firstName,
+        }
+      : {
+          lastName: userData.lastName,
+          firstName: userData.firstName,
+        };
 
     try {
       await this.usersRepository.update({ id: currentUser.id }, editUserData);

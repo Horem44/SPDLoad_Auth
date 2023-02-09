@@ -21,6 +21,12 @@ export class Users {
   email: string;
 
   @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isVerificated: boolean;
+
+  @Column({
     type: 'varchar',
     default: '',
   })

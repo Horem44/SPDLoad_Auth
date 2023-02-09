@@ -8,9 +8,11 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  app.useStaticAssets(join(__dirname, '..', 'public'), {
+  app.useStaticAssets(join(__dirname, '..', '..', 'public'), {
     prefix: '/public/',
   });
   await app.listen(8080);
 }
 bootstrap();
+
+
