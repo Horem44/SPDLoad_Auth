@@ -1,0 +1,39 @@
+.header {
+    width: 100vw;
+    background: white;
+    height: 15vh;
+    box-shadow: 0 5px 5px rgba(42, 41, 39, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+}
+
+.header a{
+    text-decoration: none;
+    color: black;
+}
+
+.header h1{
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.header h1:hover{
+    color: #44a08d;
+}
+
+.header_links {
+    
+}
+
+.header_links a{
+    text-decoration: none;
+    color: black;
+    margin-right: 2rem;
+    font-size: 1.5rem;
+}
+
+.header_links a:hover{
+    color: #44a08d;
+}

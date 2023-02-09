@@ -1,0 +1,91 @@
+.profile_container {
+    width: 70vw;
+    height: 75vh;
+    background: white;
+    border-radius: 12px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.profile_container h2{
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.profile_info {
+    display: flex;
+    justify-content: center;
+    justify-content: space-between;
+    padding: 3rem;
+}
+
+.profile_info_data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid gray;
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    width: 30%;
+}
+
+.profile_img {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile_img input{
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}
+
+.profile_info_data button{
+    font-size: 1.2rem;
+    width: 50%;
+    align-self: center;
+    border-radius: 8px;
+    border: 1px solid black;
+    background: white;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.profile_info_data input{
+    font-size: 1.2rem;
+    width: 70%;
+    align-self: center;
+    border-radius: 8px;
+    border: 1px solid black; 
+    margin-top: 1rem;
+}
+
+.profile_info_data input:hover{
+    box-shadow: inset 0 0 5px 0 rgba(0,0,0,0.4);
+}
+
+.profile_info img{
+    width: 300px;
+    height: 300px;
+    border-radius: 12px;
+    
+}
+
+.profile_info_data button:hover {
+    box-shadow: inset 0 0 5px 0 rgba(0,0,0,0.4);
+}
+
+.profile_btn {
+    font-size: 1.4rem;
+    width: 20%;
+    align-self: center;
+    border-radius: 8px;
+    border: 1px solid black;
+    background: white;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.profile_btn:hover {
+    box-shadow: inset 0 0 5px 0 rgba(0,0,0,0.4);
+}
