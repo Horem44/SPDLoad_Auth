@@ -15,7 +15,7 @@ export class UserService {
     userData: Users,
     file: Express.Multer.File,
   ) {
-    let imgUrl;
+    let imgUrl: string;
 
     if (!file) {
       imgUrl = '';

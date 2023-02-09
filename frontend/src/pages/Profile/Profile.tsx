@@ -34,11 +34,21 @@ const Profile = () => {
   });
 
   const changeFileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user.isVerificated) {
+      showErrorNotification("Please verify your email first!");
+      return;
+    }
+
     setImg(e.target.files![0]);
     setIsEditing(true);
   };
 
   const editUserInfoHandler = () => {
+    if (!user.isVerificated) {
+      showErrorNotification("Please verify your email first!");
+      return;
+    }
+
     setIsEditing((prevState) => !prevState);
   };
 
@@ -127,6 +137,9 @@ const Profile = () => {
     setIsLoading(false);
     return;
   };
+
+  console.log(user.imgUrl.split("/")[4]);
+
   return (
     <div className={classes.profile_container}>
       <Blocks
@@ -140,15 +153,59 @@ const Profile = () => {
       {!isLoading && (
         <>
           <h2>My Profile</h2>
+
           <div className={classes.profile_info}>
             <div className={classes.profile_img}>
-              <img
-                src={
-                  user.imgUrl ||
-                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                }
-                alt="profile_pic"
-              />
+              <a
+                href={`http://localhost:8080/public/600x600/${
+                  user.imgUrl.split("/")[4]
+                }`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={
+                    user.imgUrl ||
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  alt="profile_pic 600x600"
+                />
+              </a>
+
+              <a
+                href={`http://localhost:8080/public/400x400/${
+                  user.imgUrl.split("/")[4]
+                }`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  className={classes.profile_img_400}
+                  src={
+                    user.imgUrl ||
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  alt="profile_pic 400x400"
+                />
+              </a>
+
+              <a
+                href={`http://localhost:8080/public/200x200/${
+                  user.imgUrl.split("/")[4]
+                }`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  className={classes.profile_img_200}
+                  src={
+                    user.imgUrl ||
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  alt="profile_pic 200x200"
+                />
+              </a>
+
               <input
                 type="file"
                 accept="image/png, image/gif, image/jpeg"
@@ -157,6 +214,31 @@ const Profile = () => {
             </div>
 
             <input type="file" id="my_file" style={{ display: "none" }} />
+            {!user.isVerificated && (
+              <button
+                className={classes.profile_btn}
+                onClick={sendVerificationEmailHandler}
+              >
+                <Blocks
+                  visible={isLoading}
+                  height="80"
+                  width="80"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                />
+                {!isLoading && <span>Send email verification</span>}
+              </button>
+            )}
+            {!isEditing && <button className={classes.profile_btn_1}></button>}
+            {isEditing && (
+              <button
+                className={classes.profile_btn}
+                onClick={saveUserChangesHandler}
+              >
+                Save changes
+              </button>
+            )}
             <div className={classes.profile_info_data}>
               <span>First name:</span>
               {!isEditing && <span>{user.firstName}</span>}
@@ -183,30 +265,6 @@ const Profile = () => {
               <button onClick={editUserInfoHandler}>Edit</button>
             </div>
           </div>
-          {!user.isVerificated && (
-            <button
-              className={classes.profile_btn}
-              onClick={sendVerificationEmailHandler}
-            >
-              <Blocks
-                visible={isLoading}
-                height="80"
-                width="80"
-                ariaLabel="blocks-loading"
-                wrapperStyle={{}}
-                wrapperClass="blocks-wrapper"
-              />
-              {!isLoading && <span>Send email verification</span>}
-            </button>
-          )}
-          {isEditing && (
-            <button
-              className={classes.profile_btn}
-              onClick={saveUserChangesHandler}
-            >
-              Save changes
-            </button>
-          )}
         </>
       )}
     </div>
