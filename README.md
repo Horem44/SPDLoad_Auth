@@ -3,7 +3,7 @@ Test assignment for SPDLoad company
 
 # Technologies used in development
 
-ReactJS, NestJS, MySQL, TypeORM, Multer, Sharp
+ReactJS, NestJS, MySQL, TypeORM, Multer, Sharp, Redux
 
 # Description
 
