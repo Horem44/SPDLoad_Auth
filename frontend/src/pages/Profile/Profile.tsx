@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { Blocks } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { EmailApiService } from "../../services/email-api";
 import { RootState } from "../../store";
 import { authActions } from "../../store/auth-slice";
 import {
   showErrorNotification,
   showSuccessNotification,
 } from "../../util/notifications";
+import { ProfileApiService } from "../services/profile-api.service";
 import classes from "./Profile.module.css";
 
 const Profile = () => {
@@ -32,6 +34,9 @@ const Profile = () => {
     firstName: "",
     imgUrl: "",
   });
+
+  const profileApiService = new ProfileApiService();
+  const emailApiService = new EmailApiService();
 
   const changeFileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!user.isVerificated) {
@@ -59,16 +64,8 @@ const Profile = () => {
     formData.append("lastName", lastNameInputRef.current!.value);
     formData.append("file", img!);
 
-    const token = localStorage.getItem("token");
-
     try {
-      const res = await fetch("http://localhost:8080/users/edit", {
-        method: "PATCH",
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        body: formData,
-      });
+      const res = await profileApiService.saveUserChanges(formData);
 
       if (res.status === 401) {
         throw new Error("Session expired, please sign-in");
@@ -90,12 +87,7 @@ const Profile = () => {
 
   const getUserData = async () => {
     setIsLoading(true);
-    const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:8080/users/", {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const res = await profileApiService.getCurrentUser();
 
     const userData = await res.json();
 
@@ -116,15 +108,7 @@ const Profile = () => {
 
   const sendVerificationEmailHandler = async () => {
     setIsLoading(true);
-    const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:8080/email/send-verification", {
-      method: "post",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: user.email }),
-    });
+    const res = await emailApiService.sendVerification({ email: user.email });
 
     if (res.status === 401) {
       showErrorNotification("Session expired, please sign-in");
@@ -136,7 +120,6 @@ const Profile = () => {
     const resJson = await res.json();
     showSuccessNotification(resJson.message);
     setIsLoading(false);
-    return;
   };
 
   return (

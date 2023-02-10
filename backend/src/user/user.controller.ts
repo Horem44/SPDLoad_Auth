@@ -30,7 +30,7 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtGuard)
-  @Patch('edit')
+  @Patch('')
   @UseInterceptors(FileInterceptor('file', multerConfig))
   async edit(
     @GetUser() currentUser: User,

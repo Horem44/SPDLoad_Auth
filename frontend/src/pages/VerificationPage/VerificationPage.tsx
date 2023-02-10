@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Blocks } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { EmailApiService } from "../../services/email-api";
 import { authActions } from "../../store/auth-slice";
 import {
   showErrorNotification,
@@ -14,30 +15,32 @@ const VerificationPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const emailApiService = new EmailApiService();
+
+  const verificateEmail = async () => {
+    try {
+      if (!token) { 
+        navigate('/sign-in');
+        showErrorNotification('Unauthorized!');
+        return;
+      }
+
+      const res = await emailApiService.verificate(token!);
+
+      if (res.status === 401) {
+        showErrorNotification("Session expired, please sign-in");
+        navigate("/sign-in");
+        return;
+      }
+
+      setIsLoading(false);
+      dispatch(authActions.login());
+      showSuccessNotification("Email successfully verificated!");
+      navigate("/profile");
+    } catch (err) {}
+  };
 
   useEffect(() => {
-    const verificateEmail = async () => {
-      try {
-        const res = await fetch("http://localhost:8080/email/verificate", {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        });
-
-        if (res.status === 401) {
-          showErrorNotification("Session expired, please sign-in");
-          navigate("/sign-in");
-          return;
-        }
-
-        setIsLoading(false);
-        dispatch(authActions.login());
-        showSuccessNotification("Email successfully verificated!");
-        navigate("/profile");
-      } catch (err) {
-      }
-    };
-
     verificateEmail();
   }, []);
 
