@@ -2,7 +2,9 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { clientPort } from '../../constants';
 import { User } from 'src/entities/user/user.entity';
+import { UrlService } from 'src/services/url.service';
 import { Repository } from 'typeorm';
 import { EmailDto } from './dto';
 
@@ -12,6 +14,7 @@ export class EmailService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private readonly mailerService: MailerService,
+    private urlService: UrlService,
     private jwt: JwtService,
   ) {}
 
@@ -25,7 +28,9 @@ export class EmailService {
         from: 'promenergo.typography@gmail.com',
         subject: 'Email verification',
         text:
-          'To verificate your email click on link: http://localhost:3000/verification/' +
+          'To verificate your email click on link: ' +
+          this.urlService.createBaseUrl(clientPort) +
+          'verification/' +
           token,
       });
 

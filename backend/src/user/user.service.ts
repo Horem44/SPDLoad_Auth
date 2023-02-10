@@ -7,7 +7,7 @@ import { readFile } from 'fs';
 import { promisify } from 'util';
 import * as sharp from 'sharp';
 import { UrlService } from 'src/services/url.service';
-import { imgSizes } from '../../constants';
+import { imgSizes, serverPort } from '../../constants';
 import { UserDto } from './dto/user.dto';
 
 const readFileAsync = promisify(readFile);
@@ -39,7 +39,7 @@ export class UserService {
     if (file) {
       const [, ext] = file.mimetype.split('/');
       this.saveImages(ext, file);
-      editUserData.imgUrl = this.urlService.createBaseUrl() + file.path;
+      editUserData.imgUrl = this.urlService.createBaseUrl(serverPort) + file.path;
     }
 
     try {
