@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { clientPort } from '../../constants';
-import { User } from 'src/entities/user/user.entity';
-import { UrlService } from 'src/services/url.service';
+import { User } from '../entities/user/user.entity';
+import { UrlService } from '../services/url/url.service';
 import { Repository } from 'typeorm';
 import { EmailDto } from './dto';
 
@@ -20,9 +20,9 @@ export class EmailService {
 
   public async sendVerificationEmail(dto: EmailDto) {
     const email = dto.email;
-    const { access_token: token } = await this.signVerificationToken(email);
 
     try {
+      const { access_token: token } = await this.signVerificationToken(email);
       await this.mailerService.sendMail({
         to: email,
         from: 'promenergo.typography@gmail.com',
@@ -57,6 +57,16 @@ export class EmailService {
 
   public async verificateEmail(user: User) {
     try {
+      const existingUser = await this.usersRepository.findOne({
+        where: {
+          id: user.id,
+        },
+      });
+
+      if (!existingUser) {
+        throw new Error('Internal server error');
+      }
+
       await this.usersRepository.update(
         { email: user.email },
         { ...user, isVerificated: true },

@@ -37,6 +37,6 @@ export class UserController {
     @Body() dto: UserDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.userService.editUser(currentUser, dto, file);
+    return this.userService.editUser(currentUser.id, dto, file);
   }
 }

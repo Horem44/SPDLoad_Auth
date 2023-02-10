@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from 'src/auth/strategy';
 import { User } from 'src/entities/user/user.entity';
-import { UrlService } from 'src/services/url.service';
+import { UrlService } from 'src/services/url/url.service';
 import { EmailController } from './email.controller';
 import { EmailService } from './email.service';
 

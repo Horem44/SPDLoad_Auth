@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { join } from 'path';
-import { User } from 'src/entities/user/user.entity';
+import { User } from '../entities/user/user.entity';
 import { Repository } from 'typeorm';
-import { readFile } from 'fs';
-import { promisify } from 'util';
-import * as sharp from 'sharp';
-import { UrlService } from 'src/services/url.service';
-import { imgSizes, serverPort } from '../../constants';
+import { UrlService } from '../services/url/url.service';
+import { serverPort } from '../../constants';
 import { UserDto } from './dto/user.dto';
-
-const readFileAsync = promisify(readFile);
+import { ImageService } from '../services/image/image.service';
 
 interface editUserData {
   lastName: string;
@@ -24,29 +19,31 @@ export class UserService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private urlService: UrlService,
+    private imageService: ImageService,
   ) {}
 
   public async editUser(
-    currentUser: User,
-    userData: UserDto,
+    currentUserId: string,
+    userDto: UserDto,
     file: Express.Multer.File,
   ) {
     const editUserData: editUserData = {
-      lastName: userData.lastName,
-      firstName: userData.firstName,
+      lastName: userDto.lastName,
+      firstName: userDto.firstName,
     };
 
     if (file) {
       const [, ext] = file.mimetype.split('/');
-      this.saveImages(ext, file);
-      editUserData.imgUrl = this.urlService.createBaseUrl(serverPort) + file.path;
+      this.imageService.saveImages(ext, file);
+      editUserData.imgUrl =
+        this.urlService.createBaseUrl(serverPort) + file.path;
     }
 
     try {
-      await this.usersRepository.update({ id: currentUser.id }, editUserData);
+      await this.usersRepository.update({ id: currentUserId }, editUserData);
       return await this.usersRepository.findOne({
         where: {
-          id: currentUser.id,
+          id: currentUserId,
         },
       });
     } catch (err) {
@@ -55,21 +52,6 @@ export class UserService {
         message: 'Internal server error',
         error: 'Server Error',
       };
-    }
-  }
-
-  private saveImages(ext: string, file: Express.Multer.File) {
-    if (['jpeg', 'jpg', 'png'].includes(ext)) {
-      imgSizes.forEach((s: string) => {
-        const [size] = s.split('x');
-        readFileAsync(file.path).then((b: Buffer) => {
-          return sharp(b)
-            .resize(+size)
-            .toFile(
-              join(__dirname, '..', '..', '..', 'public', s, file.filename),
-            );
-        });
-      });
     }
   }
 }

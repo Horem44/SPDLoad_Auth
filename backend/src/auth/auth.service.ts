@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user/user.entity';
+import { User } from '../entities/user/user.entity';
 import { Repository } from 'typeorm';
 import { SigninDto, SignupDto } from './dto';
 import * as argon from 'argon2';
