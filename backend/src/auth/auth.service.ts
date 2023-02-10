@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from 'src/entities/users/users.entity';
+import { User } from 'src/entities/user/user.entity';
 import { Repository } from 'typeorm';
 import { SigninDto, SignupDto } from './dto';
 import * as argon from 'argon2';
@@ -9,12 +9,12 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
     private jwt: JwtService,
   ) {}
 
-  async signup(dto: SignupDto) {
+  public async signup(dto: SignupDto) {
     const hash = await argon.hash(dto.password);
 
     try {
@@ -38,7 +38,6 @@ export class AuthService {
       return this.signToken(user.id, user.email);
     } catch (err) {
       if (!err.response) {
-        console.log(err);
         return {
           statusCode: 500,
           message: 'Internal server error',
@@ -50,7 +49,7 @@ export class AuthService {
     }
   }
 
-  async signin(dto: SigninDto) {
+  public async signin(dto: SigninDto) {
     try {
       const user = await this.usersRepository.findOne({
         where: {
@@ -82,7 +81,7 @@ export class AuthService {
     }
   }
 
-  async signToken(userId: string, email: string) {
+  private async signToken(userId: string, email: string) {
     const payload = {
       sub: userId,
       email,

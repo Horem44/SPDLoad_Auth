@@ -62,32 +62,38 @@ const Profile = () => {
 
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:8080/users/edit", {
-      method: "post",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      body: formData,
-    });
+    try {
+      const res = await fetch("http://localhost:8080/users/edit", {
+        method: "PATCH",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        body: formData,
+      });
 
-    if (res.status === 401) {
-      showErrorNotification("Session expired, please sign-in");
-      navigate("/sign-in");
-      return;
+      if (res.status === 401) {
+        throw new Error("Session expired, please sign-in");
+      }
+
+      const editedUser = await res.json();
+      setUser(editedUser);
+      showSuccessNotification("Changes successfully saved!");
+      setIsEditing(false);
+      setIsLoading(false);
+      console.log(editedUser);
+    } catch (err) {
+      if (err instanceof Error) {
+        showErrorNotification(err.message);
+        navigate("/sign-in");
+        return;
+      }
     }
-
-    const editedUser = await res.json();
-    setUser(editedUser);
-    showSuccessNotification("Changes successfully saved!");
-    setIsEditing(false);
-    setIsLoading(false);
-    console.log(editedUser);
   };
 
   const getUserData = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:8080/users/me", {
+    const res = await fetch("http://localhost:8080/users/", {
       headers: {
         Authorization: "Bearer " + token,
       },

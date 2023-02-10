@@ -27,6 +27,7 @@ export class AuthController {
     return this.authService.signin(dto);
   }
 
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtGuard)
   @Get('')
   isAuth() {

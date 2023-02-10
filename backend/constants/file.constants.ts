@@ -1,0 +1,1 @@
+export const imgSizes = ['200x200', '400x400', '600x600'];

@@ -1,38 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from 'src/entities/users/users.entity';
+import { join } from 'path';
+import { User } from 'src/entities/user/user.entity';
 import { Repository } from 'typeorm';
+import { readFile } from 'fs';
+import { promisify } from 'util';
+import * as sharp from 'sharp';
+import { UrlService } from 'src/services/url.service';
+import { imgSizes } from '../../constants';
+
+const readFileAsync = promisify(readFile);
+
+interface editUserData {
+  lastName: string;
+  firstName: string;
+  imgUrl?: string;
+}
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+    private urlService: UrlService,
   ) {}
 
-  async editUser(
-    currentUser: Users,
-    userData: Users,
+  public async editUser(
+    currentUser: User,
+    userData: User,
     file: Express.Multer.File,
   ) {
-    let imgUrl: string;
+    const editUserData: editUserData = {
+      lastName: userData.lastName,
+      firstName: userData.firstName,
+    };
 
-    if (!file) {
-      imgUrl = '';
-    } else {
-      imgUrl = file.path;
+    if (file) {
+      const [, ext] = file.mimetype.split('/');
+      this.saveImages(ext, file);
+      editUserData.imgUrl = this.urlService.createBaseUrl() + file.path;
     }
-
-    const editUserData = imgUrl
-      ? {
-          imgUrl: 'http://localhost:8080/' + imgUrl,
-          lastName: userData.lastName,
-          firstName: userData.firstName,
-        }
-      : {
-          lastName: userData.lastName,
-          firstName: userData.firstName,
-        };
 
     try {
       await this.usersRepository.update({ id: currentUser.id }, editUserData);
@@ -49,4 +56,20 @@ export class UserService {
       };
     }
   }
+
+  private saveImages(ext: string, file: Express.Multer.File) {
+    if (['jpeg', 'jpg', 'png'].includes(ext)) {
+      imgSizes.forEach((s: string) => {
+        const [size] = s.split('x');
+        readFileAsync(file.path).then((b: Buffer) => {
+          return sharp(b)
+            .resize(+size)
+            .toFile(
+              join(__dirname, '..', '..', '..', 'public', s, file.filename),
+            );
+        });
+      });
+    }
+  }
 }
+

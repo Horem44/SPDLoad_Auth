@@ -2,19 +2,19 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from 'src/entities/users/users.entity';
+import { User } from 'src/entities/user/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class EmailService {
   constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
     private readonly mailerService: MailerService,
     private jwt: JwtService,
   ) {}
 
-  async sendVerificationEmail(email: string) {
+  public async sendVerificationEmail(email: string) {
     const { access_token: token } = await this.signVerificationToken(email);
 
     try {
@@ -33,7 +33,7 @@ export class EmailService {
     }
   }
 
-  async signVerificationToken(email: string) {
+  private async signVerificationToken(email: string) {
     const payload = {
       email,
     };
@@ -48,7 +48,7 @@ export class EmailService {
     };
   }
 
-  async verificateEmail(user: Users) {
+  public async verificateEmail(user: User) {
     try {
       await this.usersRepository.update(
         { email: user.email },
