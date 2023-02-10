@@ -3,11 +3,11 @@ Test assignment for SPDLoad company
 
 # Technologies used in development
 
-ReactJS, NestJS, MySQL, TypeORM, Multer, Sharp, Redux
+ReactJS, NestJS, MySQL, TypeORM, Multer, Sharp, Redux, Jest
 
 # Description
 
-An application in which the user can log in, register, confirm registration by sending a letter with a token to the mail. The user has the ability to view his profile, change data and photo. I completed an additional task, each photo that the user uploads is cut into three sizes: 200x200, 400x400, 600x600. Photos in three different sizes are displayed in his profile, by clicking on them you can get them from the server.
+An application in which the user can log in, register, confirm registration by sending a letter with a token to the mail. The user has the ability to view his profile, change data and photo. I completed an additional task, each photo that the user uploads is cut into three sizes: 200x200, 400x400, 600x600. Photos in three different sizes are displayed in his profile, by clicking on them you can get them from the server. I have made unit tests for each service.
 
 # Installation
 
