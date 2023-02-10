@@ -60,7 +60,6 @@ const Form: React.FC<FormProps> = ({ isSigningUp }) => {
         return;
       }
 
-      console.log(jwt);
       window.localStorage.setItem("token", jwt.access_token);
       dispatch(authActions.login());
       navigate("/profile");
@@ -75,7 +74,6 @@ const Form: React.FC<FormProps> = ({ isSigningUp }) => {
     } catch (err) {
       if (err instanceof Error) {
         showErrorNotification(err.message);
-        console.log(err.message);
       }
     }
   };

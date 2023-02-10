@@ -58,7 +58,6 @@ const Profile = () => {
     formData.append("firstName", firstNameInputRef.current!.value);
     formData.append("lastName", lastNameInputRef.current!.value);
     formData.append("file", img!);
-    console.log(img);
 
     const token = localStorage.getItem("token");
 
@@ -80,7 +79,6 @@ const Profile = () => {
       showSuccessNotification("Changes successfully saved!");
       setIsEditing(false);
       setIsLoading(false);
-      console.log(editedUser);
     } catch (err) {
       if (err instanceof Error) {
         showErrorNotification(err.message);
@@ -102,7 +100,6 @@ const Profile = () => {
     const userData = await res.json();
 
     if (userData.message) {
-      console.log(userData.message);
       showErrorNotification("Session expired, please sign-in");
       navigate("/sign-in");
       setIsLoading(false);
@@ -111,7 +108,6 @@ const Profile = () => {
 
     setUser(userData);
     setIsLoading(false);
-    console.log(userData);
   };
 
   useEffect(() => {
@@ -139,12 +135,9 @@ const Profile = () => {
 
     const resJson = await res.json();
     showSuccessNotification(resJson.message);
-    console.log(resJson);
     setIsLoading(false);
     return;
   };
-
-  console.log(user.imgUrl.split("/")[4]);
 
   return (
     <div className={classes.profile_container}>

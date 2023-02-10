@@ -17,7 +17,6 @@ const VerificationPage = () => {
 
   useEffect(() => {
     const verificateEmail = async () => {
-      console.log(token);
       try {
         const res = await fetch("http://localhost:8080/email/verificate", {
           headers: {
@@ -31,14 +30,11 @@ const VerificationPage = () => {
           return;
         }
 
-        const resJson = await res.json();
-        console.log(resJson);
         setIsLoading(false);
         dispatch(authActions.login());
         showSuccessNotification("Email successfully verificated!");
         navigate("/profile");
       } catch (err) {
-        console.log(err);
       }
     };
 

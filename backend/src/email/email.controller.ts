@@ -10,6 +10,7 @@ import {
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { User } from 'src/entities/user/user.entity';
+import { EmailDto } from './dto';
 import { EmailService } from './email.service';
 
 @Controller('email')
@@ -19,8 +20,8 @@ export class EmailController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtGuard)
   @Post('send-verification')
-  sendVerificationEmail(@Body() { email }: { email: string }) {
-    return this.emailService.sendVerificationEmail(email);
+  sendVerificationEmail(@Body() dto: EmailDto) {
+    return this.emailService.sendVerificationEmail(dto);
   }
 
   @HttpCode(HttpStatus.OK)

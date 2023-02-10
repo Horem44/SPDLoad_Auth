@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import Header from "./components/Header/Header";
@@ -10,9 +10,11 @@ import SignupPage from "./pages/SignupPage/SignupPage";
 import VerificationPage from "./pages/VerificationPage/VerificationPage";
 import { authActions } from "./store/auth-slice";
 import 'react-toastify/dist/ReactToastify.css';
+import { showErrorNotification } from "./util/notifications";
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
     fetch("http://localhost:8080/auth", {
@@ -29,12 +31,15 @@ function App() {
       .then((res) => {
         if (res.isAuth) {
           dispatch(authActions.login());
+          navigate('profile');
           return;
         }
         throw new Error("Unauthenticated");
       })
       .catch((err) => {
-        console.log(err);
+        if(err instanceof Error){
+          showErrorNotification(err.message);
+        }
       });
   }, [dispatch]);
 

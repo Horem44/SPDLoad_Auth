@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user/user.entity';
 import { Repository } from 'typeorm';
+import { EmailDto } from './dto';
 
 @Injectable()
 export class EmailService {
@@ -14,7 +15,8 @@ export class EmailService {
     private jwt: JwtService,
   ) {}
 
-  public async sendVerificationEmail(email: string) {
+  public async sendVerificationEmail(dto: EmailDto) {
+    const email = dto.email;
     const { access_token: token } = await this.signVerificationToken(email);
 
     try {

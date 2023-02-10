@@ -8,6 +8,7 @@ import { promisify } from 'util';
 import * as sharp from 'sharp';
 import { UrlService } from 'src/services/url.service';
 import { imgSizes } from '../../constants';
+import { UserDto } from './dto/user.dto';
 
 const readFileAsync = promisify(readFile);
 
@@ -27,7 +28,7 @@ export class UserService {
 
   public async editUser(
     currentUser: User,
-    userData: User,
+    userData: UserDto,
     file: Express.Multer.File,
   ) {
     const editUserData: editUserData = {
@@ -72,4 +73,3 @@ export class UserService {
     }
   }
 }
-
